@@ -1,5 +1,6 @@
 import Model.Solicitud;
 import Model.Persona;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -18,20 +19,21 @@ public class Main {
 
     //Datos de prueba___________________________________________________________________________________________________
     public static Persona p1 = new Persona(1, "Henry", "Gonzalez", "Ramos", "2005-02-15", false);
-    public static Persona p2 = new Persona(1, "Vanessa", "Gonzalez", "Ramos", "2005-02-15", false);
-    public static Persona p3 = new Persona(1, "Nicolas", "Carreras", "Ramos", "2005-02-15", false);
-    public static Persona p4 = new Persona(1, "Alvaro", "Carreras", "Lopez", "2005-02-15", false);
-    public static Persona p5 = new Persona(1, "Miguel", "Gonzalez", "Milico", "2005-02-15", false);
-    public static Persona p6 = new Persona(1, "Maria de los Angeles", "Ramos", "Pedro", "2005-02-15", false);
-    public static Persona p7 = new Persona(1, "Dogomar", "Ramos", "Pedro", "2005-02-15", false);
-    public static Persona p8 = new Persona(1, "Cacho", "Ramos", "Pedro", "2005-02-15", false);
-    public static Persona p9 = new Persona(1, "Raquel", "Gonzalez", "Milico", "2005-02-15", false);
-    public static Persona p10 = new Persona(1, "Darwin", "Gonzalez", "Milico", "2005-02-15", false);
-    public static Persona p11 = new Persona(1, "Mamá de Maria", "Pedro", "Pedro", "2005-02-15", true);
-    public static Persona p12 = new Persona(1, "Papá de Maria", "Ramos", "Ramos", "2005-02-15", true);
-    public static Persona p13 = new Persona(1, "Mamá de Miguel", "Gonzalez", "Gonzalez", "2005-02-15", true);
-    public static Persona p14 = new Persona(1, "Papá de Miguel", "Milico", "Milico", "2005-02-15", true);
-    public static Persona p15 = new Persona(1, "Miguel", "Carreras", "Carreras", "2005-02-15", true);
+    public static Persona p2 = new Persona(2, "Vanessa", "Gonzalez", "Ramos", "1983-02-15", false);
+    public static Persona p3 = new Persona(3, "Nicolas", "Carreras", "Ramos", "1999-05-15", false);
+    public static Persona p4 = new Persona(4, "Alvaro", "Carreras", "Lopez", "1988-02-15", false);
+    public static Persona p5 = new Persona(5, "Miguel", "Gonzalez", "Milico", "1956-02-15", false);
+    public static Persona p6 = new Persona(6, "Maria de los Angeles", "Ramos", "Pedro", "1963-02-15", false);
+    public static Persona p7 = new Persona(7, "Dogomar", "Ramos", "Pedro", "1964-02-15", false);
+    public static Persona p8 = new Persona(8, "Cacho", "Ramos", "Pedro", "1967-02-15", false);
+    public static Persona p9 = new Persona(9, "Raquel", "Gonzalez", "Milico", "1966-02-15", false);
+    public static Persona p10 = new Persona(10, "Darwin", "Gonzalez", "Milico", "1964-02-15", false);
+    public static Persona p11 = new Persona(11, "Mamá de Maria", "Pedro", "Pedro", "1942-02-15", true);
+    public static Persona p12 = new Persona(12, "Papá de Maria", "Ramos", "Ramos", "1939-02-15", true);
+    public static Persona p13 = new Persona(13, "Mamá de Miguel", "Gonzalez", "Gonzalez", "1937-02-15", true);
+    public static Persona p14 = new Persona(14, "Papá de Miguel", "Milico", "Milico", "1935-02-15", true);
+    public static Persona p15 = new Persona(15, "Miguel", "Carreras", "Carreras", "1969-02-15", true);
+    public static Persona p16 = new Persona(16, "Roberto", "Gonzalez", "Perez", "1991-02-15", false);
     //__________________________________________________________________________________________________________________
 
     public static void main(String[] args) {
@@ -52,6 +54,7 @@ public class Main {
         personaList.add(p13);
         personaList.add(p14);
         personaList.add(p15);
+        personaList.add(p16);
 
         agregarDatosDePrueba(p1, 0, p5);
         agregarDatosDePrueba(p1, 1, p6);
@@ -80,7 +83,7 @@ public class Main {
         agregarDatosDePrueba(p8, 0, p12);
         agregarDatosDePrueba(p8, 1, p11);
 
-
+        agregarDatosDePrueba(p16, 0, p10);
         //______________________________________________________________________________________________________________
         boolean salir = false;
 
@@ -100,8 +103,9 @@ public class Main {
                 System.out.println("2 - Buscar persona.     👁️");
                 System.out.println("3 - Agregar parentesco. ✔️");
                 System.out.println("4 - Ver mi Árbol.       🌳");
-                System.out.println("5 - Ver mensajes.    🧑");
-                System.out.println("6 - Cambiar Usuario.    🧑");
+                System.out.println("5 - Ver mi Generación.  🌳");
+                System.out.println("6 - Ver mensajes.       🧑");
+                System.out.println("7 - Cambiar Usuario.    🧑");
                 System.out.println("0 - Salir.  👋👋" + reset);
 
                 String opcion = scanner.nextLine();
@@ -126,10 +130,15 @@ public class Main {
                         break;
                     case "5":
                         limpiarConsola();
-                        verMensajes(raiz.getSolicitud());
+                        obtenerMiGeneracion();
                         esperarEnter();
                         break;
                     case "6":
+                        limpiarConsola();
+                        verMensajes(raiz.getSolicitud());
+                        esperarEnter();
+                        break;
+                    case "7":
                         limpiarConsola();
                         login = false;
                         break;
@@ -283,10 +292,12 @@ public class Main {
             System.out.println(reset + "¿Qué parentesco desea agregar?");
             System.out.println("1. Padre");
             System.out.println("2. Madre");
+            System.out.println("3. Hijo (como Madre)");
+            System.out.println("4. Hijo (como Padre)");
 
             int opcion = Integer.parseInt(scanner.nextLine());
 
-            if (opcion < 1 || opcion > 2) {
+            if (opcion < 1 || opcion > 4) {
                 System.out.println(rojo + "Opción inválida. if");
                 agregarParentesco();
             }
@@ -301,20 +312,34 @@ public class Main {
 
             switch (opcion) {
                 case 1:
+                    enviarSolicitud(nuevoPariente);
                     raiz.agregarPadre(nuevoPariente);
+                    nuevoPariente.agregar(nuevoPariente.getHijos(), raiz);
+                    System.out.println(verde + "Parentesco agregado con éxito.");
                     break;
                 case 2:
+                    enviarSolicitud(nuevoPariente);
                     raiz.agregarMadre(nuevoPariente);
+                    nuevoPariente.agregar(nuevoPariente.getHijos(), raiz);
+                    System.out.println(verde + "Parentesco agregado con éxito.");
+                    break;
+                case 3:
+                    enviarSolicitud(nuevoPariente);
+                    raiz.agregar(raiz.getHijos(), nuevoPariente);
+                    nuevoPariente.agregarMadre(raiz);
+                    System.out.println(verde + "Parentesco agregado con éxito.");
+                    break;
+                case 4:
+                    enviarSolicitud(nuevoPariente);
+                    raiz.agregar(raiz.getHijos(), nuevoPariente);
+                    nuevoPariente.agregarPadre(raiz);
+                    System.out.println(verde + "Parentesco agregado con éxito.");
                     break;
                 default:
                     System.out.println(rojo + "Opción inválida. default");
                     break;
             }
 
-            nuevoPariente.agregarHijo(nuevoPariente.getHijos(), raiz);
-            enviarSolicitud(nuevoPariente);
-
-            System.out.println(verde + "Parentesco agregado con éxito.");
         } catch (Exception e) {
             System.out.println(rojo + "Opción inválida. catch");
             agregarParentesco();
@@ -327,9 +352,75 @@ public class Main {
         String texto = "Solicitud de parentesco.";
         String estado = "Pendiente";
 
-        Solicitud solicitud = new Solicitud(emisorId, receptorId, texto, estado);
-        receptor.nuevaSolicitud(solicitud);
-        System.out.println(verde + "Solicitud enviada.");
+        if (!receptor.isEsFallecido()) {
+            if (receptor.edad(receptor.getFechaNac()) >= 18) {
+                Solicitud solicitud = new Solicitud(emisorId, receptorId, texto, estado);
+                receptor.nuevaSolicitud(solicitud);
+                System.out.println(verde + "Solicitud enviada.");
+            } else {
+                System.out.println(rojo + "El usuario a agregar es menor.");
+                System.out.println(reset + "Se enviará una solicitud a su tutor.");
+                Persona nuevoReceptor = tutor(receptor);
+                if (nuevoReceptor == null) {
+                    System.out.println(rojo + "No se encontró tutor.");
+                } else {
+                    texto = "Solicitud de parentesco: " + receptor.getNombre() + " " + receptor.getApellido1() + " " + receptor.getApellido2();
+                    Solicitud solicitud = new Solicitud(emisorId, nuevoReceptor.getId(), texto, estado);
+                    nuevoReceptor.nuevaSolicitud(solicitud);
+                    System.out.println(verde + "Solicitud enviada.");
+                }
+            }
+        } else {
+            List<Persona> familiares = new ArrayList<>();
+            familiares = familiaresDeFallecido(new ArrayList<>(), receptor);
+
+        }
+    }
+
+    public static List<Persona> familiaresDeFallecido(List<Persona> familiares, Persona persona) {
+        if (familiares.size() >= 3) {
+            return familiares;
+        }
+
+        Persona familiar = new Persona();
+        for (Persona hijo : persona.getHijos()) {
+            familiar = obtenerUsuarioPorId(hijo.getId());
+            if (familiar != null) {
+                if (!familiar.isEsFallecido() || familiar.edad(familiar.getFechaNac()) >= 18) {
+                    familiares.add(hijo);
+                    if (familiares.size() >= 3) {
+                        return familiares;
+                    }
+                }
+            }
+        }
+        for (Persona hijo : persona.getHijos()) {
+            familiaresDeFallecido(familiares, hijo);
+        }
+        return familiares;
+    }
+
+    public static Persona tutor(Persona persona) {
+        Persona tutor = null;
+
+        for (Persona padre : persona.getPadres()) {
+            if (padre != null) {
+                if (!padre.isEsFallecido()) {
+                    tutor = obtenerUsuarioPorId(padre.getId());
+                    if (tutor != null) {
+                        return tutor;
+                    }
+                }
+            }
+        }
+        for (Persona padre : persona.getPadres()) {
+            if (padre != null) {
+                if (padre.isEsFallecido()) {
+                    tutor(padre);
+                }
+            }
+        }
+        return tutor;
     }
 
     public static void mostrarArbolGenealogico() {
@@ -383,12 +474,12 @@ public class Main {
                 }
             }
         }
+    }
 
-        System.out.println(verde + "() () * () *");
-        System.out.println(verde + "() ) ()");
-        System.out.println(verde + ") (*");
-        System.out.println(verde + "*");
-
+    public static void arborPorNivel() {
+        System.out.println(reset + "Nivel:");
+        int nivel = Integer.parseInt(scanner.nextLine()) - 1;
+        arbolGenealogivoPorNivel(raiz, raiz, nivel);
     }
 
     public static void arbolGenealogivoPorNivel(Persona persona, Persona raiz, int nivel) {
@@ -458,7 +549,22 @@ public class Main {
                 }
             }
         }
+    }
 
+    public static void obtenerMiGeneracion() {
+
+        List<Persona> hermanos = raiz.obtenerHermanos();
+        List<Persona> primos = raiz.obtenerPrimos();
+
+        System.out.println("Hermanos:");
+        for (Persona hermano : hermanos) {
+            System.out.println(hermano.getNombre() + " " + hermano.getApellido1());
+        }
+
+        System.out.println("Primos:");
+        for (Persona primo : primos) {
+            System.out.println(primo.getNombre() + " " + primo.getApellido1());
+        }
     }
 
     public static void verMensajes(Solicitud solicitudesPendientes) {
@@ -473,7 +579,9 @@ public class Main {
             System.out.println("- " + solicitudesPendientes.getTexto());
 
             Persona persona = obtenerUsuarioPorId(solicitudesPendientes.getEmisorId());
-            System.out.println("Enviado por: " + persona.getNombre() + " " + persona.getApellido1() + " " + persona.getApellido2());
+            if (persona != null) {
+                System.out.println("Enviado por: " + persona.getNombre() + " " + persona.getApellido1() + " " + persona.getApellido2());
+            }
             System.out.println("Estado: " + solicitudesPendientes.getEstado());
 
             System.out.print("¿Aceptar? (y/n): ");
@@ -499,7 +607,12 @@ public class Main {
     }
 
     public static Persona obtenerUsuarioPorId(int id) {
-        return personaList.get(id);
+        for (Persona persona : personaList) {
+            if (persona.getId() == id) {
+                return persona;
+            }
+        }
+        return null;
     }
 
     public static void toString(Persona persona) {
@@ -514,7 +627,7 @@ public class Main {
 
     //Agregar Datos de Prueba___________________________________________________________________________________________
     public static void agregarDatosDePrueba(Persona raiz, int index, Persona padre) {
-        switch (index){
+        switch (index) {
             case 0:
                 raiz.agregarPadre(padre);
                 break;
@@ -522,7 +635,7 @@ public class Main {
                 raiz.agregarMadre(padre);
                 break;
         }
-        padre.agregarHijo(padre.getHijos(), raiz);
+        padre.agregar(padre.getHijos(), raiz);
     }
     //__________________________________________________________________________________________________________________
 

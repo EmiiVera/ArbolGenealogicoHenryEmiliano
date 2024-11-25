@@ -134,7 +134,7 @@ public class Persona {
         return padres[1] != null;
     }
 
-    public void agregarHijo(Persona[] lista, Persona hijo) {
+    public void agregar(Persona[] lista, Persona hijo) {
         Persona[] nuevaLista;
         if(lista == null) {
             nuevaLista = new Persona[1];
@@ -152,7 +152,7 @@ public class Persona {
         this.hijos = nuevaLista;
     }
 
-    public Persona[] ordenarHijosPorEdad(Persona[] listaHijos) {
+    public Persona[] ordenarPorEdad(Persona[] listaHijos) {
         if(listaHijos.length == 0) {
             return new Persona[0];
         }
@@ -165,13 +165,13 @@ public class Persona {
         Persona[] arr2 = new Persona[0];
         for (int i = 0; i < listaHijos.length; i++) {
             if (listaHijos[i].edad(fechaNac) < medio.edad(fechaNac)) {
-                agregarHijo(arr1, listaHijos[i]);
+                agregar(arr1, listaHijos[i]);
             } else if (listaHijos[i].edad(fechaNac) > medio.edad(fechaNac)) {
-                agregarHijo(arr2, listaHijos[i]);
+                agregar(arr2, listaHijos[i]);
             }
         }
-        Persona[] resultado1 = ordenarHijosPorEdad(arr1);
-        Persona[] resultado2 = ordenarHijosPorEdad(arr2);
+        Persona[] resultado1 = ordenarPorEdad(arr1);
+        Persona[] resultado2 = ordenarPorEdad(arr2);
         Persona[] delMedio = new Persona[1];
         delMedio[0] = medio;
 
@@ -187,6 +187,56 @@ public class Persona {
         }
 
         return nuevaLista;
+    }
+
+    public void obtenerHermanosRecursivo(List<Persona> lista, Persona[] hijos, int index) {
+        if (hijos == null || index >= hijos.length) {
+            return;
+        }
+        Persona hijo = hijos[index];
+        if (!hijo.equals(this) && !lista.contains(hijo)) { // Excluirse a sí mismo y evitar duplicados
+            lista.add(hijo);
+        }
+        obtenerHermanosRecursivo(lista, hijos, index + 1); // Llamada recursiva al siguiente hijo
+    }
+
+    public List<Persona> obtenerHermanos() {
+        List<Persona> hermanos = new ArrayList<>();
+        for (Persona padre : padres) {
+            if (padre != null && padre.hijos != null) {
+                obtenerHermanosRecursivo(hermanos, padre.hijos, 0); // Llamada inicial
+            }
+        }
+        return hermanos;
+    }
+
+    public void obtenerPrimosRecursivo(List<Persona> lista, Persona[] hermanos, int index) {
+        if (hermanos == null || index >= hermanos.length) {
+            return;
+        }
+        Persona tio = hermanos[index];
+        if (!tio.equals(this.padres[0]) && !tio.equals(this.padres[1]) && tio.hijos != null) { // Excluir a los padres
+            for (Persona primo : tio.hijos) {
+                if (!lista.contains(primo)) { // Evitar duplicados
+                    lista.add(primo);
+                }
+            }
+        }
+        obtenerPrimosRecursivo(lista, hermanos, index + 1); // Llamada recursiva al siguiente hermano del padre
+    }
+
+    public List<Persona> obtenerPrimos() {
+        List<Persona> primos = new ArrayList<>();
+        for (Persona padre : padres) {
+            if (padre != null && padre.padres != null) {
+                for (Persona abuelo : padre.padres) {
+                    if (abuelo != null && abuelo.hijos != null) {
+                        obtenerPrimosRecursivo(primos, abuelo.hijos, 0); // Llamada inicial
+                    }
+                }
+            }
+        }
+        return primos;
     }
 
     public void nuevaSolicitud(Solicitud solicitud) {
