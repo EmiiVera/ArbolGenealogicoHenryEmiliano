@@ -8,6 +8,7 @@ public class Main {
 
     public static String rojo = "\u001B[31m";
     public static String azul = "\u001B[34m";
+    public static String amarillo = "\u001B[33m";
     public static String verde = "\u001B[32m";
     public static String reset = "\u001B[0m";
 
@@ -52,32 +53,33 @@ public class Main {
         personaList.add(p14);
         personaList.add(p15);
 
-        p1.agregarPadre(p5);
-        p1.agregarMadre(p6);
+        agregarDatosDePrueba(p1, 0, p5);
+        agregarDatosDePrueba(p1, 1, p6);
 
-        p2.agregarPadre(p5);
-        p2.agregarMadre(p6);
+        agregarDatosDePrueba(p2, 0, p5);
+        agregarDatosDePrueba(p2, 1, p6);
 
-        p3.agregarPadre(p15);
-        p3.agregarMadre(p6);
+        agregarDatosDePrueba(p3, 0, p15);
+        agregarDatosDePrueba(p3, 1, p6);
 
-        p4.agregarPadre(p15);
+        agregarDatosDePrueba(p4, 0, p15);
 
-        p5.agregarPadre(p14);
-        p5.agregarMadre(p13);
-        p9.agregarPadre(p14);
-        p9.agregarMadre(p13);
-        p10.agregarPadre(p14);
-        p10.agregarMadre(p13);
+        agregarDatosDePrueba(p5, 0, p14);
+        agregarDatosDePrueba(p5, 1, p13);
+        agregarDatosDePrueba(p9, 0, p14);
+        agregarDatosDePrueba(p9, 1, p13);
+        agregarDatosDePrueba(p10, 0, p14);
+        agregarDatosDePrueba(p10, 1, p13);
 
-        p6.agregarPadre(p12);
-        p6.agregarMadre(p11);
+        agregarDatosDePrueba(p6, 0, p12);
+        agregarDatosDePrueba(p6, 1, p11);
 
-        p7.agregarPadre(p12);
-        p7.agregarMadre(p11);
+        agregarDatosDePrueba(p7, 0, p12);
+        agregarDatosDePrueba(p7, 1, p11);
 
-        p8.agregarPadre(p12);
-        p8.agregarMadre(p11);
+        agregarDatosDePrueba(p8, 0, p12);
+        agregarDatosDePrueba(p8, 1, p11);
+
 
         //______________________________________________________________________________________________________________
         boolean salir = false;
@@ -145,7 +147,7 @@ public class Main {
     }
 
     public static boolean loginIn() {
-        System.out.println(verde + "ÁRBOL GENEAÓGICO  🌳 🌳");
+        System.out.println(verde + "ÁRBOL GENEALÓGICO  🌳 🌳");
         System.out.println(azul + "1 - Ingresar.    🧑");
         System.out.println(azul + "2 - Registrarse. ✅");
 
@@ -332,36 +334,37 @@ public class Main {
 
     public static void mostrarArbolGenealogico() {
 
+        System.out.println(amarillo + raiz.getNombre() + " " + raiz.getApellido1() + " " + raiz.getApellido2());
         // Mostrar hermanos
-        System.out.println("|   |   L Hermanos:");
+        System.out.println(amarillo + "|   |   L " + verde + "Hermanos:");
         for (Persona padre : raiz.getPadres()) {
             if (padre != null && padre.getHijos() != null) {
                 for (Persona hermano : padre.getHijos()) {
                     if (!hermano.equals(raiz)) { // Excluirte a ti mismo
-                        System.out.println("|   |   L " + hermano.getNombre() + " " + hermano.getApellido1() + " " + hermano.getApellido2());
+                        System.out.println(amarillo + "|   |   L " + verde + hermano.getNombre() + " " + hermano.getApellido1() + " " + hermano.getApellido2());
                     }
                 }
             }
         }
 
         // Mostrar padres
-        System.out.println("|   L Padres:");
+        System.out.println(amarillo + "|   L " + verde + "Padres:");
         for (Persona padre : raiz.getPadres()) {
             if (padre != null) {
-                System.out.println("|   L " + padre.getNombre() + " " + padre.getApellido1() + " " + padre.getApellido2());
+                System.out.println(amarillo + "|   L " + verde + padre.getNombre() + " " + padre.getApellido1() + " " + padre.getApellido2());
             }
         }
 
 
         // Mostrar tíos
-        System.out.println("|   L Tíos:");
+        System.out.println(amarillo + "|   L " + verde + "Tíos:");
         for (Persona padre : raiz.getPadres()) {
             if (padre != null && padre.getPadres() != null) {
                 for (Persona abuelo : padre.getPadres()) {
                     if (abuelo != null && abuelo.getHijos() != null) {
                         for (Persona tio : abuelo.getHijos()) {
                             if (!tio.equals(padre)) { // Excluir al padre o madre
-                                System.out.println("|   L " + tio.getNombre() + " " + tio.getApellido1() + " " + tio.getApellido2());
+                                System.out.println(amarillo + "|   L " + verde + tio.getNombre() + " " + tio.getApellido1() + " " + tio.getApellido2());
                             }
                         }
                     }
@@ -370,16 +373,22 @@ public class Main {
         }
 
         // Mostrar abuelos
-        System.out.println("L Abuelos:");
+        System.out.println(amarillo + "L " + verde + "Abuelos:");
         for (Persona padre : raiz.getPadres()) {
             if (padre != null && padre.getPadres() != null) {
                 for (Persona abuelo : padre.getPadres()) {
                     if (abuelo != null) {
-                        System.out.println("L " + abuelo.getNombre() + " " + abuelo.getApellido1() + " " + abuelo.getApellido2());
+                        System.out.println(amarillo + "L " + verde + abuelo.getNombre() + " " + abuelo.getApellido1() + " " + abuelo.getApellido2());
                     }
                 }
             }
         }
+
+        System.out.println(verde + "() () * () *");
+        System.out.println(verde + "() ) ()");
+        System.out.println(verde + ") (*");
+        System.out.println(verde + "*");
+
     }
 
     public static void arbolGenealogivoPorNivel(Persona persona, Persona raiz, int nivel) {
@@ -438,7 +447,7 @@ public class Main {
             }
         }
 
-        // Si estamos en el nivel 2, procesar los tíos (hermanos de los padres)
+        // Sí estamos en el nivel 2, procesar los tíos (hermanos de los padres)
         if (nivel == 2 && persona.getHijos() != null) {
             for (Persona tio : persona.getHijos()) {
                 if (!tio.equals(raiz.getPadres()[0]) && !tio.equals(raiz.getPadres()[1])) {
@@ -456,6 +465,7 @@ public class Main {
 
         if (solicitudesPendientes == null) {
             System.out.println(verde + "No tienes mensajes." + reset);
+            esperarEnter();
             return;
         }
         try {
@@ -486,7 +496,6 @@ public class Main {
         } catch (Exception e) {
             System.out.println("No se encontró emisor.");
         }
-        esperarEnter();
     }
 
     public static Persona obtenerUsuarioPorId(int id) {
@@ -503,6 +512,18 @@ public class Main {
         System.out.println("Fecha de Nacimiento: " + persona.getFechaNac());
     }
 
+    //Agregar Datos de Prueba___________________________________________________________________________________________
+    public static void agregarDatosDePrueba(Persona raiz, int index, Persona padre) {
+        switch (index){
+            case 0:
+                raiz.agregarPadre(padre);
+                break;
+            case 1:
+                raiz.agregarMadre(padre);
+                break;
+        }
+        padre.agregarHijo(padre.getHijos(), raiz);
+    }
     //__________________________________________________________________________________________________________________
 
     //Esperar Enter_____________________________________________________________________________________________________
