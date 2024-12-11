@@ -13,17 +13,27 @@ public class Persona {
     String fechaNac;
     private boolean esFallecido;
     Persona[] padres = new Persona[2];
-    Persona[] hijos;
-    Solicitud solicitud = null;
+    Persona[] hijos = new Persona[0];
+    Solicitud solicitud;
 
     public Persona() {
     }
 
-    public Persona(int id, String nombre, String apellido1, String apellido2, String fechaNac, boolean esFallecido) {
+    public Persona(int id, String nombre, String apellido1, String apellido2, String fechaNac, boolean esFallecido, Solicitud solicitud) {
         this.id = id;
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.apellido2 = apellido2;
+        this.fechaNac = fechaNac;
+        this.esFallecido = esFallecido;
+        this.solicitud = solicitud;
+    }
+
+    public Persona(int id, String nombre, String apPaterno, String apMaterno, String fechaNac, boolean esFallecido) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido1 = apPaterno;
+        this.apellido2 = apMaterno;
         this.fechaNac = fechaNac;
         this.esFallecido = esFallecido;
     }
@@ -42,6 +52,10 @@ public class Persona {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getNombreCompleto() {
+        return this.nombre + " " + this.apellido1 + " " + this.apellido2;
     }
 
     public String getApellido1() {
@@ -101,6 +115,7 @@ public class Persona {
     }
 
     //Métodos___________________________________________________________________________________________________________
+
     public int edad(String fechaNac) {
         LocalDate nacimiento = LocalDate.parse(fechaNac);
         LocalDate hoy = LocalDate.now(); // Fecha actual
@@ -111,20 +126,29 @@ public class Persona {
     }
 
     public void agregarPadre(Persona padre) {
-        if(tienePadre()) {
+        if (tienePadre()) {
             System.out.println("Ya tiene un padre.");
             return;
         }
+        if (padres == null) {
+            padres = new Persona[2];
+        }
         padres[0] = padre;
+        padre.agregar(padre.getHijos(), this);
     }
 
     public void agregarMadre(Persona madre) {
-        if(tieneMadre()) {
-            System.out.println("Ya tiene un madre.");
+        if (tieneMadre()) {
+            System.out.println("Ya tiene una madre.");
             return;
         }
+        if (padres == null) {
+            padres = new Persona[2];
+        }
         padres[1] = madre;
+        madre.agregar(madre.getHijos(), this);
     }
+
 
     public boolean tienePadre() {
         return padres[0] != null;
@@ -135,57 +159,42 @@ public class Persona {
     }
 
     public void agregar(Persona[] lista, Persona hijo) {
-        Persona[] nuevaLista;
-        if(lista == null) {
-            nuevaLista = new Persona[1];
-            nuevaLista[0] = hijo;
-            this.hijos = nuevaLista;
-            return;
+        if (lista == null) {
+            lista = new Persona[1];
         }
 
-        nuevaLista = new Persona[lista.length + 1];
-
-        for (int i = 0; i < lista.length; i++) {
-            nuevaLista[i] = lista[i];
-        }
-        nuevaLista[nuevaLista.length - 1 ] = hijo;
+        Persona[] nuevaLista = new Persona[lista.length + 1];
+        System.arraycopy(lista, 0, nuevaLista, 0, lista.length);
+        nuevaLista[lista.length] = hijo;
         this.hijos = nuevaLista;
     }
 
-    public Persona[] ordenarPorEdad(Persona[] listaHijos) {
-        if(listaHijos.length == 0) {
+
+    public static Persona[] ordenarPorEdad(Persona[] listaHijos) {
+        if (listaHijos.length == 0) {
             return new Persona[0];
         }
-
         if (listaHijos.length == 1) {
             return listaHijos;
         }
-        Persona medio = listaHijos[listaHijos.length/2];
-        Persona[] arr1 = new Persona[0];
-        Persona[] arr2 = new Persona[0];
-        for (int i = 0; i < listaHijos.length; i++) {
-            if (listaHijos[i].edad(fechaNac) < medio.edad(fechaNac)) {
-                agregar(arr1, listaHijos[i]);
-            } else if (listaHijos[i].edad(fechaNac) > medio.edad(fechaNac)) {
-                agregar(arr2, listaHijos[i]);
+        Persona medio = listaHijos[listaHijos.length / 2];
+        List<Persona> arr1 = new ArrayList<>();
+        List<Persona> arr2 = new ArrayList<>();
+        for (Persona hijo : listaHijos) {
+            if (hijo.edad(hijo.getFechaNac()) < medio.edad(medio.getFechaNac())) {
+                arr1.add(hijo);
+            } else if (hijo.edad(hijo.getFechaNac()) > medio.edad(medio.getFechaNac())) {
+                arr2.add(hijo);
             }
         }
-        Persona[] resultado1 = ordenarPorEdad(arr1);
-        Persona[] resultado2 = ordenarPorEdad(arr2);
+        Persona[] resultado1 = ordenarPorEdad(arr1.toArray(new Persona[0]));
+        Persona[] resultado2 = ordenarPorEdad(arr2.toArray(new Persona[0]));
         Persona[] delMedio = new Persona[1];
         delMedio[0] = medio;
-
         Persona[] nuevaLista = new Persona[resultado1.length + resultado2.length + delMedio.length];
-        for (int i = 0; i < resultado1.length; i++) {
-            nuevaLista[i] = resultado1[i];
-        }
-
+        System.arraycopy(resultado1, 0, nuevaLista, 0, resultado1.length);
         nuevaLista[resultado1.length] = medio;
-
-        for (int i = resultado1.length + 1; i < resultado2.length; i++) {
-            nuevaLista[i] = resultado2[i];
-        }
-
+        System.arraycopy(resultado2, 0, nuevaLista, resultado1.length + 1, resultado2.length);
         return nuevaLista;
     }
 
@@ -215,14 +224,14 @@ public class Persona {
             return;
         }
         Persona tio = hermanos[index];
-        if (!tio.equals(this.padres[0]) && !tio.equals(this.padres[1]) && tio.hijos != null) { // Excluir a los padres
+        if (!tio.equals(this.padres[0]) && !tio.equals(this.padres[1]) && tio.hijos != null) {
             for (Persona primo : tio.hijos) {
                 if (!lista.contains(primo)) { // Evitar duplicados
                     lista.add(primo);
                 }
             }
         }
-        obtenerPrimosRecursivo(lista, hermanos, index + 1); // Llamada recursiva al siguiente hermano del padre
+        obtenerPrimosRecursivo(lista, hermanos, index + 1);
     }
 
     public List<Persona> obtenerPrimos() {
@@ -231,7 +240,7 @@ public class Persona {
             if (padre != null && padre.padres != null) {
                 for (Persona abuelo : padre.padres) {
                     if (abuelo != null && abuelo.hijos != null) {
-                        obtenerPrimosRecursivo(primos, abuelo.hijos, 0); // Llamada inicial
+                        obtenerPrimosRecursivo(primos, abuelo.hijos, 0);
                     }
                 }
             }
@@ -239,23 +248,15 @@ public class Persona {
         return primos;
     }
 
-    public void nuevaSolicitud(Solicitud solicitud) {
-        if (!tieneMensaje()) {
-            this.solicitud = solicitud;
-            return;
-        }
-        if (!solicitud.tieneNext()) {
-            this.solicitud.setNext(solicitud);
-        } else {
-            Solicitud siguiente = solicitud.getNext();
-            while (siguiente.tieneNext()) {
-                siguiente = siguiente.getNext();
-            }
-        }
-    }
 
-    public boolean tieneMensaje() {
-        return this.solicitud!= null;
+    @Override
+    public String toString() {
+        return "Datos del usuario.\n" +
+                "Id: " + this.id + "\n" +
+                "Nombre: " + this.nombre + "\n" +
+                "Apellido Paterno: " + this.apellido1 + "\n" +
+                "Apellido Materno: " + this.apellido2 + "\n" +
+                "Edad: " + edad(this.fechaNac) + " años" + "\n" +
+                "Fecha de Nacimiento: " + this.fechaNac;
     }
-
 }

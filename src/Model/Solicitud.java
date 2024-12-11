@@ -1,58 +1,42 @@
 package Model;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class Solicitud {
     private int emisorId;
     private int receptorId;
-    private String texto;
-    private String estado;
-    private Solicitud next = null;
+    private boolean confirmado;
+    private String codigoConfirmacion;
+    private Solicitud next;
+
+    public Solicitud(int emisorId, int receptorId) {
+        this.emisorId = emisorId;
+        this.receptorId = receptorId;
+        this.confirmado = false;
+        this.codigoConfirmacion = generarCodigoConfirmacion();
+    }
 
     public Solicitud() {
+        this.codigoConfirmacion = generarCodigoConfirmacion();
     }
 
-    public Solicitud( int emisorId, int receptorId, String texto, String estado) {
-
-        this.emisorId = emisorId;
-        this.receptorId = receptorId;
-        this.texto = texto;
-        this.estado = estado;
+    private String generarCodigoConfirmacion() {
+        return Integer.toString((int)(Math.random() * 1000));
     }
 
-    public boolean tieneNext() {
-        return next!= null;
+    public String getCodigoConfirmacion() {
+        return codigoConfirmacion;
     }
 
-    public int getEmisorId() {
-        return emisorId;
+    public boolean isConfirmado() {
+        return confirmado;
     }
 
-    public void setEmisorId(int emisorId) {
-        this.emisorId = emisorId;
-    }
-
-    public int getReceptorId() {
-        return receptorId;
-    }
-
-    public void setReceptorId(int receptorId) {
-        this.receptorId = receptorId;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String texto) {
-        texto = "Confirmacion pendiente.";
-        this.texto = texto;
+    public void confirmar(int codigoIngresado) {
+        if (codigoConfirmacion.equals(Integer.toString(codigoIngresado))) {
+            this.confirmado = true;
+        }
     }
 
     public Solicitud getNext() {
@@ -62,4 +46,9 @@ public class Solicitud {
     public void setNext(Solicitud next) {
         this.next = next;
     }
+
+    public boolean tieneNext() {
+        return next != null;
+    }
 }
+
