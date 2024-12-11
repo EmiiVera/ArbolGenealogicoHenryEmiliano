@@ -506,16 +506,16 @@ public class Main {
 
         // Mostrar descendentes
         if (grado > 0) {
-            mostrarDescendientes(raiz, 1, grado);
+            mostrarDescendentes(raiz, 1, grado);
         }
 
         // Mostrar ascendentes
         if (grado > 0) {
-            mostrarAscendientes(raiz, 1, grado);
+            mostrarAscendentes(raiz, 1, grado);
         }
     }
 
-    private static void mostrarDescendientes(Persona persona, int nivelActual, int gradoMaximo) {
+    private static void mostrarDescendentes(Persona persona, int nivelActual, int gradoMaximo) {
         if (nivelActual > gradoMaximo || persona.getHijos() == null) {
             return;
         }
@@ -524,12 +524,12 @@ public class Main {
                 String label = obtenerEtiqueta("descendente", nivelActual);
                 String prefix = "|".repeat(nivelActual) + "-- " + label + ": ";
                 System.out.println(prefix + mostrarConfirmacionEnArbol(hijo));
-                mostrarDescendientes(hijo, nivelActual + 1, gradoMaximo); // Llamada recursiva
+                mostrarDescendentes(hijo, nivelActual + 1, gradoMaximo); // Llamada recursiva
             }
         }
     }
 
-    private static void mostrarAscendientes(Persona persona, int nivelActual, int gradoMaximo) {
+    private static void mostrarAscendentes(Persona persona, int nivelActual, int gradoMaximo) {
         if (nivelActual > gradoMaximo || persona.getPadres() == null) {
             return;
         }
@@ -538,7 +538,7 @@ public class Main {
                 String label = obtenerEtiqueta("ascendente", nivelActual);
                 String prefix = "|".repeat(nivelActual) + "-- " + label + ": ";
                 System.out.println(prefix + mostrarConfirmacionEnArbol(padre));
-                mostrarAscendientes(padre, nivelActual + 1, gradoMaximo); // Llamada recursiva
+                mostrarAscendentes(padre, nivelActual + 1, gradoMaximo); // Llamada recursiva
             }
         }
     }
@@ -563,7 +563,7 @@ public class Main {
                 case 2: return "Nieto";
                 case 3: return "Bisnieto";
                 case 4: return "Tataranieto";
-                default: return nivel + "° Descendiente";
+                default: return nivel + "° Descendente";
             }
         }
         return "Pariente";
